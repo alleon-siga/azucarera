@@ -447,6 +447,23 @@
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-md-5 label-title">
+                        <label class="control-label">Personal:</label>
+                    </div>
+
+                    <div class="col-md-7">
+                        <div class="help-key badge label-success" style="display: none;">6</div>
+                        <select name="personal" id="personal" class='form-control'>
+                            <option value="">Seleccione</option>
+                            <?php foreach ($personales as $personal): ?>
+                                <option
+                                        value="<?= $personal->id ?>"><?= $personal->codigo . ' - ' . $personal->nombre ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+
 
             </div>
 

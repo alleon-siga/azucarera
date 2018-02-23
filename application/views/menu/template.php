@@ -570,6 +570,12 @@ $primary_nav = array(
                 'url' => $ruta . 'unidades',
                 'icon' => 'fa fa-list-ol',
                 'slug' => 'unidadesmedida'
+            ),
+            array(
+                'name' => 'Personal',
+                'url' => $ruta . 'personal',
+                'icon' => 'fa fa-users',
+                'slug' => 'unidadesmedida'
             )
         )
     ),
@@ -1151,6 +1157,17 @@ $primary_nav = array(
                     <ul class="nav navbar-nav-custom pull-right hidden-xs">
                         <!-- Alternative Sidebar Toggle Button -->
                         <!-- User Dropdown -->
+                        <li class="dropdown" id="notificaciones" style="margin-right: 15px;">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-bell" style="font-size: 25px;"></i>
+                                <span style="position: absolute; top: 2px; right: 1px;" class="badge label-danger"></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-custom dropdown-menu-right">
+                                <li>Sin Notificaciones</li>
+
+                            </ul>
+                        </li>
+
                         <li class="dropdown">
                             <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
                                 <img src="<?php echo $ruta ?>recursos/img/placeholders/photos/easytech-circle.png"
@@ -1260,16 +1277,8 @@ $primary_nav = array(
 
                             <?php //    } ?>
 
-                            <li class="dropdown" id="notifi">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Notificaciones <span class="badge"></span> <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu">
-
-                                    <li>Sin notificacione</li>
 
 
-                                </ul>
-                            </li>
                         </ul>
                         <!--  <form action="page_ready_search_results.php" class="navbar-form navbar-left" role="search">
                               <div class="form-group">

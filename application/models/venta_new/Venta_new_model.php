@@ -48,7 +48,9 @@ class venta_new_model extends CI_Model
             venta.subtotal as subtotal,
             credito.dec_credito_montodebito as credito_pagado,
             credito.dec_credito_montocuota as credito_pendiente,
-            credito.var_credito_estado as credito_estado
+            credito.var_credito_estado as credito_estado,
+            personal.codigo as personal_codigo,
+            personal.nombre as personal_nombre
             ')
             ->from('venta')
             ->join('documentos', 'venta.id_documento=documentos.id_doc')
@@ -59,6 +61,7 @@ class venta_new_model extends CI_Model
             ->join('correlativos', 'venta.id_documento=correlativos.id_documento and venta.local_id=correlativos.id_local', 'left')
             ->join('local', 'venta.local_id=local.int_local_id')
             ->join('credito', 'venta.venta_id=credito.id_venta', 'left')
+            ->join('personal', 'personal.id=venta.personal_id', 'left')
             ->order_by('venta.fecha', 'desc');
 
         if (isset($where['venta_id'])) {
@@ -243,6 +246,7 @@ function save_venta_contado($venta, $productos, $traspasos = array())
         'tasa_cambio' => $venta['tasa_cambio'],
         'dni_garante' => null,
         'inicial' => null,
+        'personal_id' => $venta['personal']
     );
 
     if ($venta['venta_status'] == 'CAJA') {
@@ -335,6 +339,7 @@ function save_venta_credito($venta, $productos, $traspasos = array(), $cuotas)
         'tasa_cambio' => $venta['tasa_cambio'],
         'dni_garante' => $venta['c_dni_garante'],
         'inicial' => $venta['c_inicial'],
+        'personal_id' => $venta['personal']
     );
 
 

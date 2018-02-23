@@ -1,5 +1,5 @@
 function verificateStockMin() {
-    $menu = $("#notifi")
+    $menu = $("#notificaciones")
      //$(".badge").html()
     $.ajax({
         type: 'GET',

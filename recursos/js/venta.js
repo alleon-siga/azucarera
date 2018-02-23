@@ -20,7 +20,7 @@ $(document).ready(function () {
     $('.date-picker').datepicker({format: 'dd/mm/yyyy'});
     $('.date-picker').css('cursor', 'pointer');
 
-    $('#producto_id, #local_id, #local_venta_id, #cliente_id, #moneda_id, #precio_id, #tipo_pago, #tipo_documento, #venta_estado, #c_garante, #c_pago_periodo').chosen({
+    $('#producto_id, #local_id, #local_venta_id, #cliente_id, #moneda_id, #precio_id, #tipo_pago, #tipo_documento, #venta_estado, #c_garante, #c_pago_periodo, #personal').chosen({
         search_contains: true
     });
     $('.chosen-container').css('width', '100%');

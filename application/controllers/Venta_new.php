@@ -136,7 +136,7 @@ class venta_new extends MY_Controller
         $data["tipo_pagos"] = $this->condiciones_pago_model->get_all();
         $data['tipo_documentos'] = $this->documentos_model->get_documentos();
         $data['precios'] = $this->precios_model->get_all_by('mostrar_precio', '1', array('campo' => 'orden', 'tipo' => 'ASC'));
-
+        $data['personales'] = $this->db->get('personal')->result();
 
         $data['dialog_venta_contado'] = $this->load->view('menu/venta/dialog_venta_contado', array(
             'tarjetas' => $this->db->get('tarjeta_pago')->result()
@@ -192,6 +192,7 @@ class venta_new extends MY_Controller
         $venta['c_fecha_giro'] = $this->input->post('c_fecha_giro');
 
         $venta['caja_total_pagar'] = $this->input->post('caja_total_pagar');;
+        $venta['personal'] = $this->input->post('personal');;
 
         $detalles_productos = json_decode($this->input->post('detalles_productos', true));
         $traspasos = json_decode($this->input->post('traspasos', true));

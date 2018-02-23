@@ -21,6 +21,7 @@
         <th>RUC - DNI</th>
         <th>Cliente</th>
         <th>Vendedor</th>
+        <th>Personal</th>
         <th>Condici&oacute;n</th>
         <th>Moneda</th>
         <th>Tip. Cam.</th>
@@ -55,6 +56,7 @@
                 <td><?= $venta->ruc?></td>
                 <td><?= $venta->cliente_nombre ?></td>
                 <td><?= $venta->vendedor_nombre ?></td>
+                <td><?= $venta->personal_nombre ?></td>
                 <td><?= $venta->condicion_nombre ?></td>
                 <td><?= $venta->moneda_nombre ?></td>
                 <td><?= $venta->moneda_tasa ?></td>
