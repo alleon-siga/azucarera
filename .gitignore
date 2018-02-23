@@ -1,0 +1,5 @@
+.DS_Store
+recursos/.DS_Store
+.htaccess
+application/config/database.php
+/application/config/database.php
