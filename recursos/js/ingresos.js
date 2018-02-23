@@ -1440,7 +1440,21 @@ function reiniciar_res(costos) {
 function accionGuardar() {
 
 
-    var miJSON = JSON.stringify(lst_producto);
+    var miJSON = [];
+
+    for (var i = 0; i < lst_producto.length; i++) {
+        miJSON.push({
+            index: lst_producto[i].index,
+            producto_id: lst_producto[i].producto_id,
+            cantidad: lst_producto[i].cantidad,
+            costo_unitario: lst_producto[i].costo_unitario,
+            importe: lst_producto[i].importe,
+            unidad: lst_producto[i].unidad,
+            unidades: lst_producto[i].unidades,
+            minimo: lst_producto[i].minimo
+        });
+    }
+    miJSON = JSON.stringify(miJSON);
 
     $.ajax({
         type: 'POST',
