@@ -809,7 +809,7 @@ class producto_model extends CI_Model
         return $query->result_array();
     }
 
-    function get_all_productos()
+    function get_all_productos($id = '')
     {
         $this->db->distinct();
         $this->db->select(' producto.producto_nombre as nombre, ' . $this->tabla . '.*,lineas.nombre_linea,
@@ -821,6 +821,7 @@ class producto_model extends CI_Model
         $this->db->join('grupos', 'grupos.id_grupo=producto.' . $this->grupo, 'left');
         $this->db->join('proveedor', 'proveedor.id_proveedor=producto.' . $this->proveedor, 'left');
         $this->db->join('impuestos', 'impuestos.id_impuesto=producto.' . $this->impuesto, 'left');
+        $this->db->where('producto.producto_nombre', $id);
         $this->db->group_by('producto_id');
         $this->db->order_by('producto_id', 'desc');
         $this->db->order_by('nombre_grupo', 'asc');
@@ -1020,6 +1021,73 @@ class producto_model extends CI_Model
             return 0;
         }
      //   return $query->row(0);
+
+    }
+    function getProducto($id){
+        $this->db->select('producto_nombre, producto_codigo_barra, producto_nota');
+        $this->db->from('producto');
+        $this->db->where('producto_id', $id);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
+    public function get_productos_list2($params = '')
+    {
+        //Consulta que muestra los productos mas vendidos de mayor a menor
+        $query = "
+            SELECT 
+                p.producto_id, 
+                p.producto_codigo_interno as codigo, 
+                p.producto_nombre, 
+                p.producto_codigo_barra as barra, 
+                i.porcentaje_impuesto,
+                SUM(up.unidades * dv.cantidad) AS ventas
+            FROM 
+                detalle_venta AS dv
+                INNER JOIN 
+                    venta v ON v.venta_id=dv.id_venta
+                INNER JOIN 
+                    producto p ON dv.id_producto=p.producto_id
+                INNER JOIN 
+                    impuestos i ON i.id_impuesto = p.producto_impuesto
+                INNER JOIN 
+                    unidades_has_producto up ON dv.id_producto=up.producto_id AND dv.unidad_medida=up.id_unidad
+                INNER JOIN 
+                    unidades_has_producto up2 ON dv.id_producto=up2.producto_id 
+                    AND (select id_unidad from unidades_has_producto where unidades_has_producto.producto_id = dv.id_producto  ORDER BY orden DESC LIMIT 1) = up2.id_unidad 
+            WHERE 
+                v.venta_status='COMPLETADO' AND producto_estatus='1' AND producto_estado='1'";
+        if(!empty($params)){
+            if($params['marca_id']>0)
+                $query .= " AND producto_marca = ".$params['marca_id'];
+            if($params['grupo_id']>0)
+                $query .= " AND produto_grupo = ".$params['grupo_id'];
+            if($params['familia_id']>0)
+                $query .= " AND producto_familia = ".$params['familia_id'];
+            if($params['linea_id']>0)
+                $query .= " AND producto_linea = ".$params['linea_id'];
+        }
+        $query .= " GROUP BY dv.id_producto ORDER BY ventas DESC";
+        return $this->db->query($query)->result();
+    }
+
+    public function autocomplete_producto($term)
+    {
+        $productos = $this->db->select(
+            'producto_id, producto_nombre')
+            ->from('producto')
+            ->where('producto_estatus', '1')
+            ->where('producto_estado', '1')
+            ->like('producto_nombre', $term)
+            ->get()->result_array();
+
+        $result = array();
+
+        foreach ($productos as $p) {
+            $result[] = $p["producto_nombre"];
+        }
+
+        return $result;
 
     }
 }

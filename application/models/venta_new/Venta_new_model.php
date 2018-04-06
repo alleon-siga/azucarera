@@ -896,4 +896,41 @@ function imprimir_factura($data)
     $mpdf->Output($nombre_archivo, 'I');
 }
 
+    function getVentaCliente($params)
+    {
+        $marca_id = $grupo_id = $familia_id = $linea_id = $producto_id = '';
+
+        $marca_id .= ($params['marca_id']>0)? " AND p.producto_marca=".$params['marca_id'] : "";
+        $grupo_id .= ($params['grupo_id']>0)? " AND p.produto_grupo=".$params['grupo_id'] : "";
+        $familia_id .= ($params['familia_id']>0)? " AND p.producto_familia=".$params['familia_id'] : "";
+        $linea_id .= ($params['linea_id']>0)? " AND p.producto_linea=".$params['linea_id'] : "";
+        $producto_id .= ($params['producto_id']!='')? " AND p.producto_id IN(".implode(",", $params['producto_id']).")" : "";
+        $search = $marca_id.$grupo_id.$familia_id.$linea_id.$producto_id;
+        //Limitar top
+        $limit = '';
+        if(isset($params['limit']) && $params['limit']>0){
+            $limit = "LIMIT 0, ".$params['limit'];
+        }
+        $query = "        
+            SELECT 
+                c.id_cliente, c.razon_social, SUM(dv.detalle_importe) AS total
+            FROM 
+                detalle_venta dv
+                INNER JOIN venta v ON v.venta_id=dv.id_venta
+                INNER JOIN cliente c ON v.id_cliente = c.id_cliente
+                INNER JOIN producto p ON p.producto_id = dv.id_producto
+                WHERE
+                    v.venta_status='COMPLETADO'
+                    AND v.fecha >= '".$params['fecha_ini']."'
+                    AND v.fecha <= '".$params['fecha_fin']."'
+                    $search
+            GROUP BY
+                c.id_cliente
+            ORDER BY 
+                v.total DESC $limit
+        ";
+
+        return $this->db->query($query)->result();        
+    }
+
 }

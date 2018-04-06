@@ -17,8 +17,8 @@
         <table class="table table-striped dataTable" id="example">
             <thead>
             <tr>
-
                 <th style="text-align: center">ID</th>
+                <th style="text-align: center">C&oacute;digo</th>
                 <th style="text-align: center">Descripci&oacute;n</th>
                 <th style="text-align: center">Grupo</th>
                 <th style="text-align: center">Ubicaci&oacute;n</th>
@@ -34,9 +34,8 @@
                 foreach ($clientes as $cliente) {
                     ?>
                     <tr>
-
-
                         <td class="center"><?= $cliente['id_cliente'] ?></td>
+                        <td><?= $cliente['codigo'] ?></td>
                         <td><?= $cliente['razon_social'] ?></td>
                         <td><?= $cliente['tipo_cliente'] == '1' ? 'Mobiliario' : 'Maquinaria'?></td>
                         <td><?= $cliente['apellido_materno'] ?></td>

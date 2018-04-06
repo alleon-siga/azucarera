@@ -100,8 +100,12 @@
 
                 <h4>Identificaci&oacute;n General</h4>
                 <div class="row">
-
-                    <div class="col-md-2">
+                    <div class="col-md-3">
+                        <label class="control-label panel-admin-text">C&oacute;digo</label>
+                        <input type="text" name="codigo" value="<?php if (isset($cliente['codigo'])) echo $cliente['codigo']; ?>"
+                        id="codigo" class="form-control" maxlength="20" />
+                    </div>
+                    <div class="col-md-3">
                         <label class="control-label panel-admin-text">Tipo de Activo</label>
                         <select id="tipo_cliente" name="tipo_cliente" class="form-control"
                                 style="display: <?= $operacion == TRUE ? 'block' : 'none' ?>;">
@@ -119,16 +123,12 @@
                             <h5><?= (isset($cliente['tipo_cliente']) && $cliente['tipo_cliente'] == 1) ? 'Jur&iacute;dico' : 'Natural' ?></h5>
                         <?php endif; ?>
                     </div>
-
-
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="control-label panel-admin-text">Descripci&oacute;n</label>
                         <input type="text" name="razon_social_j"
                                value="<?php if (isset($cliente['razon_social'])) echo $cliente['razon_social']; ?>"
                                id="razon_social_j" class="form-control"/>
                     </div>
-
-
                     <div class="col-md-3">
                         <label class="control-label panel-admin-text">Grupo</label>
                         <select id="grupo_id_juridico" name="grupo_id_juridico" required="true"
@@ -140,14 +140,6 @@
                             <?php endforeach ?>
                         </select>
                     </div>
-
-                    <div class="col-md-2">
-                        <label class="control-label panel-admin-text">Subgrupo</label>
-                        <input type="text" name="ruc_j"
-                               value="<?php if (isset($cliente['identificacion'])) echo $cliente['identificacion']; ?>"
-                               id="ruc_j" class="form-control"/>
-                    </div>
-
                     <div class="col-md-2" style="display: none;">
                         <label class="control-label panel-admin-text"></label>
                         <select id="tipo_iden" name="tipo_iden" class="form-control">
@@ -175,7 +167,12 @@
                 <br>
 
                 <div class="row">
-
+                    <div class="col-md-3">
+                        <label class="control-label panel-admin-text">Subgrupo</label>
+                        <input type="text" name="ruc_j"
+                               value="<?php if (isset($cliente['identificacion'])) echo $cliente['identificacion']; ?>"
+                               id="ruc_j" class="form-control"/>
+                    </div>
                     <div class="col-md-3">
                         <label class="control-label panel-admin-text">Numero de Serie</label>
                         <input type="text" name="nombres"
@@ -197,14 +194,14 @@
                                value="<?php if (isset($cliente['apellido_materno'])) echo $cliente['apellido_materno']; ?>"
                                id="apellido_materno" class="form-control" data-placeholder="Apellido materno"/>
                     </div>
-
-
-                    <div class="col-md-2">
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
                         <label class="control-label panel-admin-text">Localizaci&oacute;n</label>
                         <input type="text" name="apellidoPJuridico"
                                value="<?php if (isset($cliente['dni'])) echo $cliente['dni']; ?>"
                                id="apellidoPJuridico" class="form-control" data-placeholder="Nombre"/>
-                    </div>
+                    </div>                    
                 </div>
 
                 <br>
@@ -212,7 +209,7 @@
                 <h4>Datos Adicionales</h4>
                 <div class="row">
 
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label class="control-label panel-admin-text">Asegurado</label>
                         <select id="telefono2" name="telefono2" required="true" class="chosen form-control">
                             <option value="0" <?php if (isset($cliente['telefono2']) and $cliente['telefono2'] == 0) echo "selected" ?>>
@@ -227,7 +224,7 @@
                     </div>
 
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="control-label panel-admin-text">Compa&ntilde;ia</label>
                         <input type="text" id="direccion_j" required="true"
                                class="form-control" name="direccion_j"
@@ -243,7 +240,7 @@
                         </select>
                     </div>
 
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label class="control-label panel-admin-text">Proveedor</label>
                         <input type="text" name="correo"
                                value="<?php if (isset($cliente['email'])) echo $cliente['email']; ?>"
@@ -294,8 +291,9 @@
     $(function(){
         $('#apellido_paterno').datepicker({
             weekStart: 1,
-            format: 'dd-mm-yyyy',
-            startDate: '+1d'})
+            format: 'dd-mm-yyyy'
+            /*startDate: '+1d'*/
+        })
     })
 </script>
 

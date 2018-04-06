@@ -172,7 +172,8 @@ class cliente extends MY_Controller
             'grupo_id' => $this->input->post('grupo_id_juridico')!=""?$this->input->post('grupo_id_juridico'): null,
             'agente_retension' => $this->input->post('retencion')?$this->input->post('retencion'):0,
             'agente_retension_valor' =>$this->input->post('retencion_value')==0? null: $this->input->post('retencion_value'),
-            'linea_credito' => $this->input->post('lineaC_j')?$this->input->post('lineaC_j'):null
+            'linea_credito' => $this->input->post('lineaC_j')?$this->input->post('lineaC_j'):null,
+            'codigo' => $this->input->post('codigo')
         );
 
             if (empty($id)) {
@@ -422,7 +423,7 @@ class cliente extends MY_Controller
         $pdf = new Pdf('P', 'mm', 'A4', true, 'UTF-8', false);
         $pdf->setPageOrientation('L');
         // $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetTitle('CLIENTES');
+        $pdf->SetTitle('ACTIVOS');
         // $pdf->SetSubject('FICHA DE MIEMBROS');
         $pdf->SetPrintHeader(false);
 //echo K_PATH_IMAGES;
@@ -476,7 +477,7 @@ class cliente extends MY_Controller
 
         $pdf->SetFontSize(12);
 
-        $pdf->writeHTMLCell($w = 0, $h = 0, $x = '', $y = '', "<br><br><b><u>LISTA DE CLIENTES</u></b><br><br>", $border = 0, $ln = 1, $fill = 0, $reseth = true, $align = 'C', $autopadding = true);
+        $pdf->writeHTMLCell($w = 0, $h = 0, $x = '', $y = '', "<br><br><b><u>LISTA DE ACTIVOS</u></b><br><br>", $border = 0, $ln = 1, $fill = 0, $reseth = true, $align = 'C', $autopadding = true);
 
 
         //preparamos y maquetamos el contenido a crear
@@ -490,6 +491,7 @@ class cliente extends MY_Controller
 
 
         $html .= "<table><tr>";
+        $html .= "<th>Codigo</th>";
         $html .= "<th>ID</th><th>Razon Social</th>";
         $html .= "<th>DNI o RUC</th>";
         $html .= "<th>Grupo</th>";
@@ -498,7 +500,7 @@ class cliente extends MY_Controller
         $html .= "<th>Email</th>";
         $html .= "</tr>";
         foreach ($clientes as $familia) {
-            $html .= "<tr><td>" . $familia['id_cliente'] . "</td>";
+            $html .= "<tr><td>".$familia['codigo']."</td><td>" . $familia['id_cliente'] . "</td>";
             if($familia['tipo_cliente']==1){
                 $html .= "<td>" . $familia['razon_social'] . "</td>";
             }else{
@@ -526,7 +528,7 @@ class cliente extends MY_Controller
 // ---------------------------------------------------------
 // Cerrar el documento PDF y preparamos la salida
 // Este método tiene varias opciones, consulte la documentación para más información.
-        $nombre_archivo = utf8_decode("ListaFClientes.pdf");
+        $nombre_archivo = utf8_decode("ListaFActivos.pdf");
         $pdf->Output($nombre_archivo, 'D');
 
 
@@ -543,20 +545,21 @@ class cliente extends MY_Controller
         $this->phpexcel->getProperties()
             //->setCreator("Arkos Noem Arenom")
             //->setLastModifiedBy("Arkos Noem Arenom")
-            ->setTitle("Reporte de Clientes")
-            ->setSubject("Reporte de Clientes")
-            ->setDescription("Reporte de Clientes")
-            ->setKeywords("Reporte de Clientes")
-            ->setCategory("Reporte de Clientes");
+            ->setTitle("Reporte de Activos")
+            ->setSubject("Reporte de Activos")
+            ->setDescription("Reporte de Activos")
+            ->setKeywords("Reporte de Activos")
+            ->setCategory("Reporte de Activos");
 
 
         $columna_pdf[0] = "ID";
-        $columna_pdf[1] = "Raz�n social";
-        $columna_pdf[2] = "DNI o RUC";
-        $columna_pdf[3] = "Grupo";
-        $columna_pdf[4] = "Direccion";
-        $columna_pdf[5] = "Tel�fono ";
-        $columna_pdf[6] = "Email";
+        $columna_pdf[1] = "Codigo";
+        $columna_pdf[2] = "Razon social";
+        $columna_pdf[3] = "DNI o RUC";
+        $columna_pdf[4] = "Grupo";
+        $columna_pdf[5] = "Direccion";
+        $columna_pdf[6] = "Telefono ";
+        $columna_pdf[7] = "Email";
 
 
         $col = 0;
@@ -572,6 +575,10 @@ class cliente extends MY_Controller
 
             $this->phpexcel->setActiveSheetIndex(0)
                 ->setCellValueByColumnAndRow($col, $row, $cliente['id_cliente']);
+            $col++;
+
+            $this->phpexcel->setActiveSheetIndex(0)
+                ->setCellValueByColumnAndRow($col, $row, $cliente['codigo']);
             $col++;
 
              if($cliente['tipo_cliente']==1){
@@ -612,7 +619,7 @@ class cliente extends MY_Controller
         }
 
         // Renombramos la hoja de trabajo
-        $this->phpexcel->getActiveSheet()->setTitle('Reporte Clientes');
+        $this->phpexcel->getActiveSheet()->setTitle('Reporte Activos');
 
 
         // configuramos el documento para que la hoja
@@ -625,7 +632,7 @@ class cliente extends MY_Controller
 
         // redireccionamos la salida al navegador del cliente (Excel2007)
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="ReporteClientes.xlsx"');
+        header('Content-Disposition: attachment;filename="ReporteActivos.xlsx"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($this->phpexcel, 'Excel2007');

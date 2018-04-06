@@ -1,4 +1,7 @@
 <style>
+    .datepicker {
+        z-index: 9999 !important;
+    }
     /**
      * Fix for elevateZoom with jQuery modal
      */
@@ -296,7 +299,7 @@
                                 </div>
 
                                 <div class="col-md-8">
-                                    <input type="text" class='input-small input-square form-control my_datepicker'
+                                    <input style="cursor: pointer;" type="text" class='input-small input-square form-control my_datepicker'
                                            name="producto_vencimiento"
                                            id="producto_vencimiento"
                                            readonly

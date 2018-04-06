@@ -115,9 +115,10 @@ echo validation_errors('<div class="alert alert-danger alert-dismissable"">', "<
                                             <div class="controls">
                                                 <select name="pago" id="pago" class='cho form-control'
                                                         required="true">
-                                                    <option value="" selected>Seleccione</option>
+                                                    <option value="">Seleccione</option>
                                                     <option
-                                                        value="CONTADO" <?php if (isset($ingreso->pago) and $ingreso->pago == "CONTADO") echo "selected" ?>>
+                                                        value="CONTADO" <?php if ((isset($ingreso->pago) and $ingreso->pago == "CONTADO") || 
+                                                        !isset($ingreso->pago)) echo "selected" ?>>
                                                         CONTADO
                                                     </option>
                                                     <option
@@ -259,6 +260,7 @@ echo validation_errors('<div class="alert alert-danger alert-dismissable"">', "<
                                         <div class="controls">
                                             <select name="cboProveedor" id="cboProveedor"
                                                     class='cho form-control' required="true" required="true">
+                                                <option value="" selected>Seleccione</option>
                                                 <?php if (count($lstProveedor) > 0): ?>
                                                     <?php foreach ($lstProveedor as $pv): ?>
                                                         <option

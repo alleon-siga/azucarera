@@ -228,11 +228,144 @@
 </div> -->
 
 <!-- END Mini Top Stats Row -->
-
-
-
+<div class="row">
+    <?php if ($this->usuarios_grupos_model->user_has_perm($this->session->userdata('nUsuCodigo'), 'reporteVentas')) { ?>
+    <div class="col-md-6">
+        <div id="containerRv" style="min-width: 310px; height: 400px; margin: 0 auto"></div>        
+    </div>    
+    <?php } ?>
+    
+    <?php if ($this->usuarios_grupos_model->user_has_perm($this->session->userdata('nUsuCodigo'), 'reporteCompras')) { ?>
+    <div class="col-md-6">
+        <div id="containerRc" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+    </div>
+    <?php } ?>
+</div>
 
 <!-- Load and execute javascript code used only in this page -->
 <script src="<?php echo $ruta; ?>recursos/js/pages/index.js"></script>
-<script>$(function(){ Index.init(); });</script>
+<script>
+    $(function(){ 
+        Index.init();
+        //Grafico de reporte de ventas
+        $.post('<?php echo $ruta; ?>principal/reporteVentas', {}, function(result){
+            var data_estadistica = eval("("+result+")"); // Obtenemos la informacion del JSON
+            var options = {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Reporte semanal de salidas'
+                },
+                subtitle: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: [
+                        'Dom',
+                        'Lun',
+                        'Mar',
+                        'Mie',
+                        'Jue',
+                        'Vie',
+                        'Sab'
+                    ],
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Dolares ($)'
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0" nowrap>{series.name}: </td>' +
+                        '<td style="padding:0" nowrap><b> {point.y:.1f} $</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: [{
+                    name: 'Ventas',
+                    data: []
 
+                }, {
+                    name: 'Ganancias',
+                    data: []
+
+                }]
+            };
+
+            for(var i = 0; i < data_estadistica['venta'].length; i++){
+                options.series[0].data.push(parseInt(data_estadistica['venta'][i]['1']));
+                options.series[1].data.push(parseInt(data_estadistica['utilidad'][i]['1']));
+            }            
+            Highcharts.chart('containerRv', options);
+        });
+
+        $.post('<?php echo $ruta; ?>principal/reporteCompras', {}, function(result){
+            var data_estadistica = eval("("+result+")"); // Obtenemos la informacion del JSON
+            var options = {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Reporte semanal de compras'
+                },
+                subtitle: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: [],
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Dolares ($)'
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0" nowrap>{series.name}: </td>' +
+                        '<td style="padding:0" nowrap><b> {point.y:.1f} $</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: [{
+                    name: 'Compras',
+                    data: []
+
+                }]
+            };
+            //var arrDia = ['Dom','Lun','Mar','Mie','Jue','Vie','Sab'];
+            var arrMes = ['Dic', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov'];
+            for(var i = 0; i < data_estadistica['ingresos'].length; i++){
+                let fechaYhora = data_estadistica['ingresos'][i]['fecha_emision'].split(' ');
+                let arrFecha = fechaYhora[0].split('-');
+                let fecha = new Date(arrFecha[0],arrFecha[1],arrFecha[2]);
+                //let dia = fecha.getDay(); 
+                let mes = fecha.getMonth();
+
+                //options.xAxis.categories.push(arrDia[dia] + ' ' + arrFecha[2] + ' ' + arrMes[mes]);
+                options.xAxis.categories.push(arrFecha[2] + ' ' + arrMes[mes]);
+                options.series[0].data.push(parseInt(data_estadistica['ingresos'][i]['total']));
+            }            
+            Highcharts.chart('containerRc', options);
+        });
+    });
+</script>

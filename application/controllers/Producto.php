@@ -154,19 +154,31 @@ class producto extends MY_Controller
     function index()
     {
         $data = $this->_prepareFlashData();
-
-        $data["lstProducto"] = $this->producto_model->get_all_productos();
-        $data['columnas'] = $this->columnas;
         //$data["lstProducto"] = $this->_getUnidades($data['lstProducto']);
-
         $dataCuerpo['cuerpo'] = $this->load->view('menu/producto/producto', $data, true);
-
         if ($this->input->is_ajax_request())
             echo $dataCuerpo['cuerpo'];
         else
             $this->load->view('menu/template', $dataCuerpo);
+    }
 
+    function producto_list(){
+        $id = $this->input->post('id');
+        $data["lstProducto"] = $this->producto_model->get_all_productos($id);
+        $data['columnas'] = $this->columnas;
+        $dataCuerpo['cuerpo'] = $this->load->view('menu/producto/producto_list', $data, true);
+        if ($this->input->is_ajax_request())
+            echo $dataCuerpo['cuerpo'];
+        else
+            $this->load->view('menu/template', $dataCuerpo);
+    }
 
+    function buscador_producto(){
+        if ($this->input->is_ajax_request()) {
+            echo json_encode($this->producto_model->autocomplete_producto($this->input->get('term', true)));
+        } else {
+            redirect(base_url() . 'producto/', 'refresh');
+        }
     }
 
 
@@ -1085,4 +1097,74 @@ class producto extends MY_Controller
 
     }
 
+    function printBarcode($id = null){
+        if(!empty($id)){
+            $data = $this->producto_model->getProducto($id);
+            // create new PDF document
+            $pdf = new TCPDF('L', 'in', array(2, 1), true, 'UTF-8', false);
+            // set document information
+            $pdf->SetCreator(PDF_CREATOR);
+            $pdf->SetAuthor('Nicola Asuni');
+            $pdf->SetTitle('Barcode');
+            $pdf->SetSubject('Barcode');
+            $pdf->SetKeywords('Barcode de productos');
+            // remove default header/footer
+            $pdf->setPrintHeader(false);
+            $pdf->setPrintFooter(false);
+            // set header and footer fonts
+            $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+            $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+            // set default monospaced font
+            $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+            // set margins
+            $pdf->SetMargins('0', '0', '0');
+            // set auto page breaks
+            $pdf->SetAutoPageBreak(FALSE, PDF_MARGIN_BOTTOM);
+            // set image scale factor
+            $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+            // set some language-dependent strings (optional)
+            if (@file_exists(dirname(__FILE__).'/lang/spa.php')) {
+                require_once(dirname(__FILE__).'/lang/spa.php');
+                $pdf->setLanguageArray($l);
+            }
+            // set font
+            $pdf->SetFont('helvetica', '', 6);
+            // add a page
+            $pdf->AddPage();
+            // define barcode style
+            $style = array(
+            'position' => 'L',
+            'align' => 'L',
+            'stretch' => false,
+            'fitwidth' => true,
+            'cellfitalign' => '',
+            'border' => false,
+            'hpadding' => 'auto',
+            'vpadding' => 'auto',
+            'fgcolor' => array(0,0,0),
+            'bgcolor' => false, //array(255,255,255),
+            'text' => true,
+            'font' => 'helvetica',
+            'fontsize' => 8,
+            'stretchtext' => 4
+            );
+            // CODE 128 A
+            $pdf->Cell(0, 0, '     '.$data['producto_nombre'], 0, 1);
+            $pdf->Cell(0, 0, '     '.$data['producto_nota'], 0, 1);
+            $pdf->write1DBarcode($data['producto_codigo_barra'], 'C128', '', '', '', '', 0.4, $style, 'N');
+            //Close and output PDF document
+            $pdf->Output($data['producto_codigo_barra'].'.pdf', 'I');         
+        }
+    }
+
+    function selectProducto()
+    {
+        $params['marca_id'] = $this->input->post('marca_id');
+        $params['grupo_id'] = $this->input->post('grupo_id');
+        $params['familia_id'] = $this->input->post('familia_id');
+        $params['linea_id'] = $this->input->post('linea_id');
+        $data['barra_activa'] = $this->db->get_where('columnas', array('id_columna' => 36))->row();
+        $data["productos"] = $this->producto_model->get_productos_list2($params);
+        $this->load->view('menu/producto/selectProducto', $data);
+    }
 }

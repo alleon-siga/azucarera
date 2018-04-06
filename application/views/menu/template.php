@@ -51,7 +51,7 @@ $template = array(
     'active_page' => basename($_SERVER['PHP_SELF'])
 );
 
-
+echo "hola ".$this->session->userdata('tema');
 if ($this->session->userdata('tema')) {
 
     $template['theme'] = $this->session->userdata('tema');
@@ -454,6 +454,18 @@ $primary_nav = array(
                 'icon' => 'fa fa-credit-card',
                 'slug' => 'estadodecuenta'
             ),
+            array(
+                'name' => 'Costo de inventario',
+                'url' => $ruta . 'ingresos/costoinventario',
+                'icon' => 'fa fa-credit-card',
+                'slug' => 'costoinventario'
+            ),
+            array(
+                'name' => 'Ventas por cliente',
+                'url' => $ruta . 'venta_new/ventacliente',
+                'icon' => 'fa fa-credit-card',
+                'slug' => 'ventacliente'
+            )
         ),
     ),
     array(
@@ -722,6 +734,8 @@ $primary_nav = array(
     <script src="<?php echo $ruta; ?>recursos/js/jquery.elevateZoom-3.0.8.min.js"></script>
 
     <script src="<?php echo $ruta ?>recursos/js/pages/tablesDatatables.js"></script>
+    <script src="<?php echo $ruta; ?>recursos/highcharts/highcharts.js"></script>
+    <script src="<?php echo $ruta; ?>recursos/highcharts/modules/exporting.js"></script>
     <script>
         var baseurl = '<?php echo base_url();?>';
         var ventas_credito = 0;

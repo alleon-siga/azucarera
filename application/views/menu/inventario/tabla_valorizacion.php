@@ -41,7 +41,7 @@
                     }
                     ?>
                 </td>
-                <td>
+                <td>..
 
                     <?php
                     if (isset($operacion)) {

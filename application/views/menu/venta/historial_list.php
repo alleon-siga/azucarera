@@ -5,7 +5,7 @@
             <label>Subtotal: <?= MONEDA ?> <span id="subtotal"><?=number_format($venta_totales->subtotal, 2)?></span></label>
         </div>
         <div class="col-md-2">
-            <label>IGV: <?= MONEDA ?> <span id="impuesto"><?=number_format($venta_totales->impuesto, 2)?></span></label>
+            <label>ITBMS: <?= MONEDA ?> <span id="impuesto"><?=number_format($venta_totales->impuesto, 2)?></span></label>
         </div>
         <div class="col-md-2">
             <label>Total: <?= MONEDA ?> <span id="total"><?=number_format($venta_totales->total, 2)?></span></label>
@@ -26,7 +26,7 @@
         <th>Moneda</th>
         <th>Tip. Cam.</th>
         <th>SubTotal</th>
-        <th>IGV</th>
+        <th>ITBMS</th>
         <th>Total <?= $venta_action == 'caja' ? 'a Pagar' : '' ?></th>
         <th>Acciones</th>
 

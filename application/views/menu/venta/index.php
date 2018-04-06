@@ -35,20 +35,26 @@
                     </div>
 
                     <div class="col-md-7">
-                        <div class="input-group">
-                            <div class="help-key badge label-success" style="display: none;">1</div>
-                            <select name="cliente_id" id="cliente_id" class='form-control'>
-                                <?php foreach ($clientes as $cliente): ?>
-                                    <option
-                                            value="<?php echo $cliente['id_cliente']; ?>"
-                                            data-ruc="<?= $cliente['ruc'] ?>"><?php echo $cliente['razon_social']; ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                            <a id="cliente_new" href="#" class="input-group-addon btn-default">
-                                <i class="fa fa-plus-circle"></i>
-                            </a>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label class="control-label panel-admin-text">Activo fijo:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="help-key badge label-success" style="display: none;">1</div>
+                                <select name="cliente_id" id="cliente_id" class='form-control'>
+                                    <?php foreach ($clientes as $cliente): ?>
+                                        <option
+                                                value="<?php echo $cliente['id_cliente']; ?>"
+                                                data-ruc="<?= $cliente['ruc'] ?>"><?php echo $cliente['codigo'].' - '.$cliente['razon_social']; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <a id="cliente_new" href="#" class="input-group-addon btn-default">
+                                    <i class="fa fa-plus-circle"></i>
+                                </a>
+                            </div>
                         </div>
-
                     </div>
                 </div>
 

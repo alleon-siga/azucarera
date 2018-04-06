@@ -1156,4 +1156,63 @@ WHERE detalleingreso.id_ingreso='$compra_id'");
         $sql = $this->db->query($query);
         return $sql->result_array();
     }
+
+    function getCostoInventario($params)
+    {
+        $marca_id = $local_id = $grupo_id = $familia_id = $linea_id = $producto_id = $id_proveedor = '';
+
+        $local_id .= ($params['local_id']>0)? " AND l.int_local_id=".$params['local_id'] : "";
+        $marca_id .= ($params['marca_id']>0)? " AND p.producto_marca=".$params['marca_id'] : "";
+        $grupo_id .= ($params['grupo_id']>0)? " AND p.produto_grupo=".$params['grupo_id'] : "";
+        $familia_id .= ($params['familia_id']>0)? " AND p.producto_familia=".$params['familia_id'] : "";
+        $linea_id .= ($params['linea_id']>0)? " AND p.producto_linea=".$params['linea_id'] : "";
+        $id_proveedor .= ($params['id_proveedor']>0)? " AND i.int_Proveedor_id=".$params['id_proveedor'] : "";
+        $producto_id .= ($params['producto_id']!='')? " AND p.producto_id IN(".implode(",", $params['producto_id']).")" : "";
+        $search = $local_id.$marca_id.$grupo_id.$familia_id.$linea_id.$id_proveedor.$producto_id;
+        //Limitar top
+        $limit = '';
+        if(isset($params['limit']) && $params['limit']>0){
+            $limit = "LIMIT 0, ".$params['limit'];
+        }
+
+        $id_proveedor = $params['id_proveedor'];
+        $grupo_id = $params['grupo_id'];
+        $familia_id = $params['familia_id'];
+        $linea_id = $params['linea_id'];
+        $marca_id = $params['marca_id'];
+
+        $query = "SELECT l.int_local_id, l.local_nombre, 
+            IF($id_proveedor='0', 'TODOS', pr.proveedor_nombre) AS proveedor_nombre, 
+            IF($grupo_id='0', 'TODOS', g.nombre_grupo) AS nombre_grupo,
+            IF($familia_id='0', 'TODOS', f.nombre_familia) AS nombre_familia,
+            IF($linea_id='0', 'TODOS', li.nombre_linea) AS nombre_linea, 
+            IF($marca_id='0', 'TODOS', m.nombre_marca) AS nombre_marca, 
+            SUM(di.total_detalle) AS total
+            FROM ingreso i
+            INNER JOIN detalleingreso di ON i.id_ingreso = di.id_ingreso
+            INNER JOIN proveedor pr ON i.int_Proveedor_id = pr.id_proveedor
+            INNER JOIN `local` l ON i.local_id = l.int_local_id
+            INNER JOIN producto p ON di.id_producto = p.producto_id
+            LEFT JOIN grupos g ON p.produto_grupo = g.id_grupo
+            LEFT JOIN familia f ON p.producto_familia = f.id_familia
+            LEFT JOIN lineas li ON p.producto_linea = li.id_linea
+            LEFT JOIN marcas m ON p.producto_marca = m.id_marca
+            WHERE i.ingreso_status='COMPLETADO' $search
+            GROUP BY i.local_id ORDER BY total DESC ".$limit;
+
+        return $this->db->query($query)->result();
+    }
+
+    function get_compras2(){
+        $this->db->select("
+            ingreso.fecha_emision as fecha_emision,
+            SUM(ingreso.total_ingreso * IFNULL(ingreso.tasa_cambio, 1)) as total
+        ")
+        ->from('ingreso');
+        $this->db->where('ingreso.ingreso_status', 'COMPLETADO');
+        $this->db->group_by('DATE(ingreso.fecha_emision)');
+        $this->db->order_by('ingreso.fecha_emision DESC');
+        $this->db->limit('7');
+        return $this->db->get()->result_array();
+    }
 }

@@ -1,5 +1,9 @@
 <?php $ruta = base_url(); ?>
-
+<style>
+    .ui-autocomplete-loading {
+        background: white url("<?= $ruta ?>recursos/img/ui-anim_basic_16x16.gif") right center no-repeat;
+    }
+</style>
 
 <ul class="breadcrumb breadcrumb-top">
     <li>Inventario</li>
@@ -30,15 +34,11 @@
 <div class="block">
 
     <div class="row">
-
-        <div class="btn-group" role="group" aria-label="..." align="center">
-
-
+        <div class="col-md-9">
             <a class="btn btn-primary" onclick="agregar();">
                 <i class="fa fa-plus"></i> Nuevo
             </a>
-
-
+            
             <a class="btn btn-default" onclick="duplicar();">
                 <i class="fa fa-angle-double-up"></i> Duplicar
             </a>
@@ -58,83 +58,27 @@
             <a class="btn btn-default" onclick="ver_imagen();">
                 <i class="fa fa-columns"></i> Imagen
             </a>
-            <?php if (getProductoSerie() == "SI"): ?>
-                <a class="btn btn-default" onclick="ver_serie();">
+            <a class="btn btn-default" onclick="ver_barcode()" target="_blank">
+                <i class="fa fa-barcode"></i> Imprimir barcode
+            </a>
+            <?php //if (getProductoSerie() == "SI"): ?>
+                <!--<a class="btn btn-default" onclick="ver_serie();">
                     <i class="fa fa-barcode"></i> Series
-                </a>
-            <?php endif; ?>
+                </a>-->
+            <?php //endif; ?>
         </div>
-
+        <div class="col-md-3">
+            <div class="input-group">
+                <input class="form-control" type="text" name="producto" id="tags" value="">
+                <span class="input-group-addon"><i class="fa fa-search"></i></span>
+            </div>
+        </div>
     </div>
     <br>
 
-    <div class="table-responsive" id="productostable">
-        <table class='table table-striped dataTable table-bordered table-responsive' id="table" style="width: 100%;">
-            <thead>
-            <tr>
-                <?php if (canShowCodigo()): ?>
-                    <th><?php echo getCodigoNombre() ?></th>
-                <?php endif; ?>
-                <?php foreach ($columnas as $col): ?>
-                    <?php
-                    if ($col->mostrar == TRUE && $col->nombre_columna != 'producto_estado' && $col->nombre_columna != 'producto_codigo_interno' && $col->nombre_columna != 'producto_id') {
-                        echo " <th>" . $col->nombre_mostrar . "</th>";
-                    }
-
-                    ?>
-                <?php endforeach; ?>
-                <th>Estado</th>
-
-
-            </tr>
-            </thead>
-            <tbody id="tbody">
-
-            <?php foreach ($lstProducto as $pd):
-
-                ?>
-
-                <tr id="<?= $pd['producto_id'] ?>">
-                    <?php if (canShowCodigo()): ?>
-                        <td><?php echo getCodigoValue(sumCod($pd['producto_id']), $pd['producto_codigo_interno']) ?></td>
-                    <?php endif; ?>
-                    <?php foreach ($columnas as $col): ?>
-                        <?php if (array_key_exists($col->nombre_columna, $pd) and $col->mostrar == TRUE) {
-                            if ($col->nombre_columna != 'producto_estado' && $col->nombre_columna != 'producto_codigo_interno' && $col->nombre_columna != 'producto_id') {
-                                echo "<td>";
-                                if ($col->nombre_columna == 'producto_vencimiento')
-                                    echo $pd[$col->nombre_join] != null ? date('d-m-Y', strtotime($pd[$col->nombre_join])) : '';
-                                else
-                                    echo $pd[$col->nombre_join];
-                                echo "</td>";
-                            }
-
-                        } ?>
-                    <?php endforeach; ?>
-
-                    <td>
-                        <?php if ($pd['producto_estado'] == 0) {
-                            echo "INACTIVO";
-                        } else {
-                            echo "ACTIVO";
-                        } ?>
-
-                    </td>
-
-
-                </tr>
-
-            <?php endforeach; ?>
-
-
-            </tbody>
-        </table>
-
-    </div>
-
-
 </div>
 
+<div id="tabla"></div>
 
 <div class="modal fade" id="productomodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true">
@@ -157,7 +101,6 @@
 
 
 </div>
-
 
 <div class="modal fade" id="borrar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true">
@@ -331,6 +274,15 @@
         else selectProductError();
     }
 
+    function ver_barcode() {
+        var id = $("#tbody tr.ui-selected").attr('id');
+        if (id != undefined) {
+            var p = window.open('<?= $ruta ?>producto/printBarcode/' + id, '_blank');
+            p.focus();
+        }
+        else selectProductError();
+    }
+
     function confirmar() {
         var id = $("#tbody tr.ui-selected").attr('id');
         if (id != undefined) {
@@ -440,11 +392,30 @@
 </script>
 
 <!-- Load and execute javascript code used only in this page -->
-
-
 <script>$(function () {
-
-
+        $( "#tags" ).autocomplete({
+            source: "<?= $ruta?>producto/buscador_producto",
+            minLength: 3,
+            select: function( event, ui ) {
+                $("#tabla").html($("#loading").html());
+                $.ajax({
+                    url: '<?= base_url() ?>producto/producto_list',
+                    data: { 'id': ui.item.value },
+                    type: 'POST',
+                    success: function(response){
+                        $("#tabla").html(response);
+                    },
+                    error: function(){
+                        $.bootstrapGrowl('<h4>Error.</h4> <p>Ha ocurrido un error en la operaci&oacute;n</p>', {
+                            type: 'danger',
+                            delay: 5000,
+                            allow_dismiss: true
+                        });
+                        $("#tabla").html('');
+                    }
+                });
+            }
+        });
 
         // este codigo es para que al abrir un modal encima de otro modal no se pierda el scroll
         $('.modal').on("hidden.bs.modal", function (e) {
@@ -460,9 +431,6 @@
                 $(this).css('z-index', parseInt($('.modal-backdrop.in').first().css('z-index')) + 10);
             }
         });
-
-
-        TablesDatatables.init();
 
         //setTimeout(function () { $(window).resize(); }, 400);
 

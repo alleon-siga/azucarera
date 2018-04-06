@@ -27,7 +27,15 @@ $(document).ready(function () {
 });
 
 function guardarcliente() {
-
+    if ($('#codigo').val() == "") {
+        var growlType = 'warning';
+        $.bootstrapGrowl('<h4>Debe ingresar un c&oacute;digo</h4>', {
+            type: growlType,
+            delay: 2500,
+            allow_dismiss: true
+        });
+        return false
+    }
 
     if ($('#tipo_cliente').val() == "") {
         var growlType = 'warning';
@@ -156,7 +164,7 @@ function guardarcliente() {
             var growlType = 'warning';
 
 
-            $.bootstrapGrowl('<h4>Ha ocurrido un error al realizar la operacion</h4>', {
+            $.bootstrapGrowl('<h4>El codigo '+ $('#codigo').val() +' ya existe</h4>', {
                 type: growlType,
                 delay: 2500,
                 allow_dismiss: true
