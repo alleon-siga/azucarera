@@ -522,22 +522,22 @@ class exportar extends MY_Controller
         $mpdf = new mPDF('utf-8', 'A4-L');
 
         $this->load->model('historico/historico_model');
-        $condicion=array(
+       /* $condicion=array(
             'movimiento_historico.tipo_movimiento'=>"TRASPASO"
-        );
+        );*/
 
         if ($this->input->post('local') !="TODOS") {
             $condicion['local_id']=$this->input->post('local');
         }
         $data['local']=$this->input->post('locales', true);
         if ($_POST['fecIni'] != "") {
-            $condicion['date >= ']= date('Y-m-d', strtotime($_POST['fecIni']));
+            $condicion['fecha >= ']= date('Y-m-d', strtotime($_POST['fecIni']));
         }
 
         if ($_POST['fecFin'] != "") {
             $fechadespues = strtotime('+1 day', strtotime($_POST['fecFin']));
 
-            $condicion['date <= ']= date('Y-m-d', $fechadespues);
+            $condicion['fecha <= ']= date('Y-m-d', $fechadespues);
         }
 
         if ($this->input->post('productos', true) !="TODOS") {
@@ -545,10 +545,10 @@ class exportar extends MY_Controller
         }
 
         if ($this->input->post('tipo', true) !="TODOS") {
-            $condicion['tipo_operacion']=$this->input->post('tipo', true);
+            $condicion['io']=$this->input->post('tipo', true);
         }
         //var_dump($condicion);
-        $data['movimientos']=$this->historico_model->get_historico($condicion);
+        $data['movimientos']=$this->historico_model->get_historico2($condicion);
 
         $mpdf->WriteHTML($this->load->view('menu/reportes/pdftraspaso', $data, true));
         $mpdf->Output();
@@ -559,22 +559,22 @@ class exportar extends MY_Controller
     {
 
         $this->load->model('historico/historico_model');
-        $condicion=array(
+        /*$condicion=array(
             'movimiento_historico.tipo_movimiento'=>"TRASPASO"
-        );
+        );*/
 
         if ($this->input->post('local') !="TODOS") {
             $condicion['local_id']=$this->input->post('local');
         }
         $data['local']=$this->input->post('locales', true);
         if ($_POST['fecIni'] != "") {
-            $condicion['date >= ']= date('Y-m-d', strtotime($_POST['fecIni']));
+            $condicion['fecha >= ']= date('Y-m-d', strtotime($_POST['fecIni']));
         }
 
         if ($_POST['fecFin'] != "") {
             $fechadespues = strtotime('+1 day', strtotime($_POST['fecFin']));
 
-            $condicion['date <= ']= date('Y-m-d', $fechadespues);
+            $condicion['fecha <= ']= date('Y-m-d', $fechadespues);
         }
 
         if ($this->input->post('productos', true) !="TODOS") {
@@ -582,10 +582,10 @@ class exportar extends MY_Controller
         }
 
         if ($this->input->post('tipo', true) !="TODOS") {
-            $condicion['tipo_operacion']=$this->input->post('tipo', true);
+            $condicion['io']=$this->input->post('tipo', true);
         }
         //var_dump($condicion);
-        $data['movimientos']=$this->historico_model->get_historico($condicion);
+        $data['movimientos']=$this->historico_model->get_historico2($condicion);
 
 
         $this->load->view('menu/reportes/excelTraspaso', $data);

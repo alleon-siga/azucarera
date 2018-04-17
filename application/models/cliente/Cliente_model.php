@@ -21,17 +21,17 @@ class cliente_model extends CI_Model
 
     function get_all()
     {
-
-       // $this->db->join('usuario', 'usuario.nUsuCodigo=cliente.vendedor_a','left');
-        $this->db->where('cliente_status', 1);
-        //$this->db->join('ciudades', 'ciudades.ciudad_id=cliente.ciudad_id');
-        //$this->db->join('estados', 'ciudades.estado_id=estados.estados_id');
-        //$this->db->join('pais', 'pais.id_pais=estados.pais_id');
-        $this->db->join('grupos_cliente', 'grupos_cliente.id_grupos_cliente=cliente.grupo_id');
-        $this->db->join('ciudades c', 'c.ciudad_id=cliente.ciudad_id', 'left');
-        //$this->db->join('precios', 'precios.id_precio=cliente.categoria_precio','left');
-        $query = $this->db->get('cliente');
-        return $query->result_array();
+      // $this->db->join('usuario', 'usuario.nUsuCodigo=cliente.vendedor_a','left');
+      $this->db->select('cliente.id_cliente, cliente.codigo, cliente.razon_social, cliente.tipo_cliente, cliente.apellido_materno, cliente.nombres');
+      $this->db->where('cliente_status', 1);
+      //$this->db->join('ciudades', 'ciudades.ciudad_id=cliente.ciudad_id');
+      //$this->db->join('estados', 'ciudades.estado_id=estados.estados_id');
+      //$this->db->join('pais', 'pais.id_pais=estados.pais_id');
+      $this->db->join('grupos_cliente', 'grupos_cliente.id_grupos_cliente=cliente.grupo_id');
+      $this->db->join('ciudades c', 'c.ciudad_id=cliente.ciudad_id', 'left');
+      //$this->db->join('precios', 'precios.id_precio=cliente.categoria_precio','left');
+      $query = $this->db->get('cliente');
+      return $query->result_array();
     }
     function get_by($campo, $valor)
     {

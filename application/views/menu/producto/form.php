@@ -1222,7 +1222,6 @@
         }
 
         function guardarproducto() {
-
             if ($("#tasa_convert").val() != '0.00' || $("#tasa_convert_contable").val() != '0.00') {
                 $("#tasa_convert").val($("#tasa_input").val());
                 $("#tasa_convert_contable").val($("#tasa_input").val());
@@ -1479,6 +1478,7 @@
 
 
             $("#cargando_modal").modal('show');
+            var busq = $('#producto_nombre').val();
             var formData = new FormData($("#formguardar")[0]);
             $.ajax({
                 url: ruta + 'producto/registrar',
@@ -1497,7 +1497,7 @@
                             url: ruta + 'producto',
                             success: function (data) {
                                 $('#page-content').html(data);
-
+                                busqueda(busq);
                             }
                         });
 
@@ -2128,4 +2128,22 @@
 
         }
 
+        function busqueda(param){
+            $.ajax({
+                url: '<?= base_url() ?>producto/producto_list',
+                data: { 'id': param },
+                type: 'POST',
+                success: function(response){
+                    $("#tabla").html(response);
+                },
+                error: function(){
+                    $.bootstrapGrowl('<h4>Error.</h4> <p>Ha ocurrido un error en la operaci&oacute;n</p>', {
+                        type: 'danger',
+                        delay: 5000,
+                        allow_dismiss: true
+                    });
+                    $("#tabla").html('');
+                }
+            });
+        }
     </script>

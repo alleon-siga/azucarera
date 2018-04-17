@@ -165,22 +165,21 @@ class traspaso extends MY_Controller
 
             $this->load->model('kardex/kardex_model');
 
-            $condicion = array(
+            /*$condicion = array(
                 'movimiento_historico.tipo_movimiento' => "TRASPASO"
-            );
+            );*/
 
             if ($this->input->post('locales') != "TODOS") {
                 $condicion['local_id'] = $this->input->post('locales');
             }
             $data['local'] = $this->input->post('locales', true);
             if ($_POST['fecIni'] != "") {
-                $condicion['date >= '] = date('Y-m-d', strtotime($_POST['fecIni']));
+                $condicion['fecha >= '] = date('Y-m-d', strtotime($_POST['fecIni']));
             }
 
             if ($_POST['fecFin'] != "") {
                 $fechadespues = strtotime('+1 day', strtotime($_POST['fecFin']));
-
-                $condicion['date <= '] = date('Y-m-d', $fechadespues);
+                $condicion['fecha <= '] = date('Y-m-d', $fechadespues);
             }
 
             if ($this->input->post('productos_traspaso', true) != "TODOS") {
@@ -188,10 +187,10 @@ class traspaso extends MY_Controller
             }
 
             if ($this->input->post('tipo_mov', true) != "TODOS") {
-                $condicion['tipo_operacion'] = $this->input->post('tipo_mov', true);
+                $condicion['io'] = $this->input->post('tipo_mov', true);
             }
 
-            $data['movimientos'] = $this->historico_model->get_historico($condicion);
+            $data['movimientos'] = $this->historico_model->get_historico2($condicion);
 
             $this->load->view('menu/traspaso/lst_reg_traspasos', $data);
         } else {

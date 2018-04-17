@@ -309,7 +309,7 @@
                             url: '<?= $ruta?>producto',
                             success: function (data) {
                                 $('#page-content').html(data);
-
+                                busqueda('');
                             }
                         });
 
@@ -389,6 +389,25 @@
         });
     }
 
+    function busqueda(param){
+        $.ajax({
+            url: '<?= base_url() ?>producto/producto_list',
+            data: { 'id': param },
+            type: 'POST',
+            success: function(response){
+                $("#tabla").html(response);
+            },
+            error: function(){
+                $.bootstrapGrowl('<h4>Error.</h4> <p>Ha ocurrido un error en la operaci&oacute;n</p>', {
+                    type: 'danger',
+                    delay: 5000,
+                    allow_dismiss: true
+                });
+                $("#tabla").html('');
+            }
+        });
+    }
+
 </script>
 
 <!-- Load and execute javascript code used only in this page -->
@@ -454,16 +473,6 @@
             jQuery.removeData(jQuery('#img_01'), 'elevateZoom');//remove zoom instance from image
             jQuery('.zoomContainer').remove();// remove zoom container from DOM
         });
-
-        $("#tbody").selectable({
-            stop: function () {
-
-                var id = $("#tbody tr.ui-selected").attr('id');
-            }
-        });
-
-
-
 
         /*
          NO DESOMENTAR ESTO

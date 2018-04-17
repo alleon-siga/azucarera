@@ -1,5 +1,5 @@
 <style type="text/css">
-    .dataTables_filter, .dataTables_info, .dataTables_length { visibility: hidden; }
+    .dataTables_filter, .dataTables_info, .dataTables_length { display: none; }
 </style>
 <div class="table-responsive" id="productostable">
     <table class='table table-striped dataTable table-bordered table-responsive' id="table" style="width: 100%;">
@@ -51,4 +51,12 @@
 </div>
 <script type="text/javascript">
     TablesDatatables.init();
+
+    $(function () {
+        $("#tbody").selectable({
+            stop: function () {
+                var id = $("#tbody tr.ui-selected").attr('id');
+            }
+        });
+    });  
 </script>

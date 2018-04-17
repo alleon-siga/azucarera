@@ -14,7 +14,7 @@
     <br>
 
     <div class="table-responsive">
-        <table class="table table-striped dataTable" id="example">
+        <table class="table table-striped dataTable table-bordered no-footer tableStyle" id="example">
             <thead>
             <tr>
                 <th style="text-align: center">ID</th>
@@ -40,30 +40,23 @@
                         <td><?= $cliente['tipo_cliente'] == '1' ? 'Mobiliario' : 'Maquinaria'?></td>
                         <td><?= $cliente['apellido_materno'] ?></td>
                         <td><?= $cliente['nombres'] ?></td>
-
-
                         <!--  <td><?php //if($cliente['categoria_precio']!=null){ echo  $cliente['nombre_precio']; }?></td> -->
-
                         <td class="center">
-                            <div class="btn-group">
-                                <?php
-
-                                echo '<a class="btn btn-default" data-toggle="tooltip"
-                                            title="Editar" data-original-title="fa fa-comment-o"
-                                            href="#" onclick="editar(' . $cliente['id_cliente'] . ');">'; ?>
-                                <i class="fa fa-edit"></i>
-                                </a>
-                                <?php if($cliente['razon_social']!='Cliente Frecuente') {
-                                    ?>
-                                    <a class="btn btn-default" data-toggle="tooltip"
-                                       title="Eliminar" data-original-title="fa fa-comment-o"
-                                       onclick="borrar(<?= $cliente['id_cliente'] ?>,'<?= $cliente['razon_social'] ?>')";
-                                        >
-                                        <i class="fa fa-trash"></i>
-                                    </a>
-                                <?php } ?>
-
-                            </div>
+                        <?php
+                        echo '<a class="btn btn-default" data-toggle="tooltip"
+                                    title="Editar" data-original-title="fa fa-comment-o"
+                                    href="#" onclick="editar(' . $cliente['id_cliente'] . ');">'; ?>
+                        <i class="fa fa-edit"></i>
+                        </a>
+                        <?php if($cliente['razon_social']!='Cliente Frecuente') {
+                            ?>
+                            <a class="btn btn-default" data-toggle="tooltip"
+                               title="Eliminar" data-original-title="fa fa-comment-o"
+                               onclick="borrar(<?= $cliente['id_cliente'] ?>,'<?= $cliente['razon_social'] ?>')";
+                                >
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        <?php } ?>
                         </td>
                     </tr>
                 <?php }

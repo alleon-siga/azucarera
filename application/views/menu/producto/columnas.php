@@ -1,4 +1,5 @@
 <script type="application/javascript">
+    var busq = $('#tags').val();
     var columna = {
         guardarCol : function () {
             $("#cargando_modal").modal('show');
@@ -17,7 +18,7 @@
                             url: ruta + 'producto',
                             success: function (data) {
                                 $('#page-content').html(data);
-
+                                busqueda(busq);
                             }
                         });
 
@@ -65,6 +66,25 @@
             });
          //    App.formSubmitAjax($("#columnasform").attr('action'), getproductosbylocal, 'columnas', 'columnasform');
         }
+    }
+
+    function busqueda(param){
+        $.ajax({
+            url: '<?= base_url() ?>producto/producto_list',
+            data: { 'id': param },
+            type: 'POST',
+            success: function(response){
+                $("#tabla").html(response);
+            },
+            error: function(){
+                $.bootstrapGrowl('<h4>Error.</h4> <p>Ha ocurrido un error en la operaci&oacute;n</p>', {
+                    type: 'danger',
+                    delay: 5000,
+                    allow_dismiss: true
+                });
+                $("#tabla").html('');
+            }
+        });
     }
 </script>
 <form name="formagregar" id="columnasform" action="<?= base_url() ?>producto/guardarcolumnas" method="post">

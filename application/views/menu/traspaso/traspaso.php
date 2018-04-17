@@ -53,15 +53,15 @@
                             <label class="col-md-2 panel-admin-text">Local:</label>
                             <div class="col-md-4"><select class="form-control" id="locales" name="locales"
                                                           onchange="buscar()">
-                                    <option value="TODOS">TODOS</option>
+                                    <option value="TODOS" selected="selected">TODOS</option>
                                     <?php
                                     $i = 0;
                                     foreach ($locales as $local) {
                                         ?>
-                                        <option value="<?= $local['int_local_id'] ?>" <?php if ($i == 0) {
-                                            echo "selected";
-                                            $i++;
-                                        } ?> >
+                                        <option value="<?= $local['int_local_id'] ?>" <?php //if ($i == 0) {
+                                            //echo "selected";
+                                            //$i++;
+                                        //} ?> >
                                             <?= $local['local_nombre'] ?></option>
                                     <?php } ?>
 
@@ -107,8 +107,8 @@
 
                             <select onchange="buscar()" class="form-control" id="tipo_mov" name="tipo_mov">
                                 <option value="TODOS" selected>TODOS</option>
-                                <option value="ENTRADA">ENTRADA</option>
-                                <option value="SALIDA">SALIDA</option>
+                                <option value="2">ORIGEN</option>
+                                <option value="1">DESTINO</option>
                             </select>
                         </div>
 
